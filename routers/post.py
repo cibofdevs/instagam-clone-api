@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -20,3 +22,8 @@ def create(request: PostBase, db: Session = Depends(get_db)):
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Parameter image_url_type is not can only takes values 'absolute' or 'relative'.")
     return db_post.create(db, request)
+
+
+@router.get("/all", response_model=List[PostDisplay])
+def posts(db: Session = Depends(get_db)):
+    return db_post.get_all(db)
